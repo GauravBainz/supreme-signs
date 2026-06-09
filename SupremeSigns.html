@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supreme Signs — Shop System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;1,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E2231A;--red-dark:#B81D16;--red-tint:#FDF1F0;
+  --ink:#1B1B1F;--grey:#6E6E73;--faint:#9C9CA1;
+  --paper:#F6F5F2;--card:#FFFFFF;--panel:#FAF9F7;
+  --line:#E8E6E1;--line-strong:#D9D6D0;
+  --good:#1B7F4D;--bad:#C01818;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:'Barlow',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  font-size:14.5px;line-height:1.45}
+
+/* ---------- header ---------- */
+header{background:#fff;border-bottom:1px solid var(--line);
+  padding:10px 22px;display:flex;align-items:center;gap:26px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:5}
+header::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--red)}
+nav{display:flex;gap:2px}
+nav button{background:none;border:none;cursor:pointer;
+  font:600 14px 'Barlow',sans-serif;letter-spacing:.01em;color:var(--grey);
+  padding:10px 14px;border-radius:0;border-bottom:2px solid transparent;
+  transition:color .12s,border-color .12s}
+nav button:hover{color:var(--ink)}
+nav button.on{color:var(--ink);border-bottom-color:var(--red)}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.rolebtn{background:#fff;border:1px solid var(--line-strong);border-radius:999px;
+  padding:7px 14px;font:600 12.5px 'Barlow',sans-serif;color:var(--ink);cursor:pointer;
+  transition:border-color .12s,background .12s}
+.rolebtn:hover{border-color:var(--red);color:var(--red)}
+.hdr-rate{text-align:right;line-height:1.2}
+.hdr-rate .l{display:block;font-size:10.5px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--faint)}
+.hdr-rate b{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+.hdr-rate b::after{content:"/hr";font-size:11px;font-weight:600;color:var(--grey);margin-left:1px}
+
+.wrap{max-width:1040px;margin:26px auto;padding:0 18px}
+
+/* ---------- cards & headings ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px 24px;margin-bottom:18px}
+h2{margin:0 0 14px;font-size:17px;font-weight:700;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:16px;height:3px;background:var(--red);border-radius:2px;flex:none}
+h3{margin:26px 0 10px;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--grey);background:none;
+  padding:0 0 6px;border-bottom:1px solid var(--line);border-radius:0}
+
+label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--grey);display:block;margin-bottom:4px}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--ink);
+  padding:7px 10px;border:1px solid var(--line-strong);border-radius:7px;
+  background:#fff;width:100%;transition:border-color .12s,box-shadow .12s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);
+  box-shadow:0 0 0 3px rgba(226,35,26,.10)}
+input[readonly],.ro{background:var(--panel);font-weight:600;font-variant-numeric:tabular-nums}
+
+.grid{display:grid;gap:12px 16px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{background:none;text-align:left;padding:7px 9px;border:none;
+  border-bottom:2px solid var(--ink);font-size:10.5px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--grey)}
+th.right{text-align:right}
+td{border:none;border-bottom:1px solid var(--line);padding:0}
+td input,td select{border:none;border-radius:0;background:transparent;padding:8px 9px}
+td input:focus,td select:focus{box-shadow:inset 0 0 0 1.5px var(--red);background:var(--red-tint)}
+td.ro,td .ro{background:var(--panel);text-align:right;padding:8px 9px;font-weight:600}
+tbody tr:last-child td{border-bottom:1px solid var(--line)}
+
+/* ---------- buttons ---------- */
+.btn{background:var(--red);color:#fff;border:1px solid var(--red);border-radius:8px;
+  padding:8px 16px;font:600 13px 'Barlow',sans-serif;letter-spacing:.01em;
+  cursor:pointer;margin:6px 6px 0 0;transition:background .12s,border-color .12s,color .12s}
+.btn:hover{background:var(--red-dark);border-color:var(--red-dark);filter:none}
+.btn.alt{background:#fff;color:var(--ink);border-color:var(--line-strong)}
+.btn.alt:hover{background:var(--panel);border-color:var(--grey)}
+.btn.del{background:#fff;color:var(--bad);border-color:var(--line-strong)}
+.btn.del:hover{background:var(--red-tint);border-color:var(--bad)}
+
+/* ---------- KPIs & tracker ---------- */
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:14px 12px;text-align:center}
+.kpi .box .n{font-size:22px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .box .l{font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--faint);margin-top:3px}
+.good{color:var(--good)}.bad{color:var(--bad)}
+.barrow{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:12.5px;
+  font-variant-numeric:tabular-nums}
+.barrow .lab{width:90px;color:var(--grey);font-weight:600}
+.bar{height:10px;background:var(--red);border-radius:3px;min-width:3px}
+.muted{color:var(--grey);font-size:12.5px}
+.jobrow{cursor:pointer}
+.jobrow td{padding:9px;transition:background .1s}
+.jobrow:hover td{background:var(--red-tint)}
+.right{text-align:right}.center{text-align:center}
+
+/* ---------- mobile ---------- */
+@media(max-width:680px){
+  .g3,.g4,.kpi{grid-template-columns:1fr 1fr}
+  .g2{grid-template-columns:1fr}
+  .wrap{margin:14px auto;padding:0 12px}
+  .card{padding:16px 14px;border-radius:10px}
+
+  /* header: compact, nav scrolls if tight, rate stays visible */
+  header{gap:10px;padding:6px 12px;row-gap:0}
+  header svg{width:92px;height:34px}
+  nav{order:3;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    margin:0 -12px;padding:0 12px}
+  nav button{padding:10px 12px;white-space:nowrap}
+  .hdr-right{margin-left:auto;gap:8px}
+  .rolebtn{padding:6px 11px;min-height:34px}
+  .hdr-rate b{font-size:14px}
+
+  /* inputs: 16px stops iOS focus-zoom; bigger touch targets */
+  input,select,textarea{font-size:16px;padding:9px 10px}
+  td input,td select{font-size:16px;padding:10px 8px}
+  .btn{padding:11px 16px;font-size:14px;min-height:44px}
+  nav button{min-height:44px}
+
+  /* wide tables scroll sideways instead of crushing */
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    margin:0 -14px;padding:0 14px;width:auto;max-width:calc(100% + 28px)}
+  table thead,table tbody{display:table;width:100%;min-width:560px}
+  td .ro,td.ro{padding:10px 8px}
+  td select.m{min-width:170px}
+  td select.u{min-width:60px}
+  td input.w,td input.h,td input.q,td input.wh{min-width:64px}
+  td input.wd{min-width:130px}
+  td select.we,td select.wt{min-width:120px}
+  td input.wr,td input.oi,td input.mn{min-width:150px}
+  td input.wp,td input.wb,td input.ov,td input.mc,td input.ms{min-width:80px}
+
+  .kpi .box .n{font-size:18px}
+  .barrow{flex-wrap:wrap}
+  .barrow .lab{width:auto;min-width:80px}
+}
+@media(max-width:400px){
+  .g3,.g4{grid-template-columns:1fr 1fr}
+  .kpi{grid-template-columns:1fr 1fr}
+  header svg{width:80px;height:30px}
+}
+</style>
+</head>
+<body>
+<header>
+  <svg width="118" height="44" viewBox="0 0 250 92" aria-label="Supreme Signs logo">
+    <text x="13" y="42" font-family="'Arial Black',Arial,sans-serif" font-weight="900" font-style="italic" font-size="40" fill="#1a1a1a">SUPREME</text>
+    <text x="9" y="39" font-family="'Arial Black',Arial,sans-serif" font-weight="900" font-style="italic" font-size="40" fill="#E2231A">SUPREME</text>
+    <text x="72" y="84" font-family="'Arial Black',Arial,sans-serif" font-weight="900" font-style="italic" font-size="40" fill="#1a1a1a">SIGNS</text>
+  </svg>
+  <nav>
+    <button data-v="jobs" class="on">Jobs</button>
+    <button data-v="tracker">Cost Tracker</button>
+    <button data-v="settings">Settings</button>
+  </nav>
+  <span class="hdr-right">
+    <span class="hdr-rate" id="hdrRateWrap"><span class="l">Shop rate</span><b id="hdrRate">—</b></span>
+    <button class="rolebtn" id="roleBtn">Office</button>
+  </span>
+</header>
+<div class="wrap" id="app"></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const money=n=>'$'+(Math.round(n||0)).toLocaleString();
+const money2=n=>'$'+(n||0).toFixed(2);
+const pct=n=>((n||0)*100).toFixed(1)+'%';
+
+/* ---------- default data ---------- */
+const DEFAULTS={
+  settings:{
+    wages:[{role:"Shop lead",pay:58240,burden:.20},{role:"Shop helper",pay:41600,burden:.20},
+           {role:"Outside sales rep",pay:60000,burden:.20},{role:"Receptionist",pay:40000,burden:.20},
+           {role:"Owner / Manager (draw)",pay:70000,burden:.10}],
+    overhead:[{i:"Rent & utilities",v:48000},{i:"Insurance / WCB / safety",v:2279},{i:"Software & subscriptions",v:1534},
+              {i:"Marketing",v:2984},{i:"Govt / admin / office",v:7452},{i:"Other / misc",v:10889}],
+    billStaff:2,paidHrs:2080,util:.60,
+    designAnnual:7200,designHrs:1800,designSell:95,
+    truckAnnual:22932,truckHrs:400,
+    laborMarkup:.60,materialMarkup:.50,subMarkup:.20,overheadPct:.10,targetMargin:.35,
+    laminate:.52,waste:.15,officePin:"1234",
+    employees:["Shop lead","Shop helper","Designer","Sales rep"],
+    materials:[
+      {n:"Arlon DPF4500MLX Wht",c:.59,vinyl:1,sell:0},{n:"Arlon DPF4650GLX Wht",c:.52,vinyl:1,sell:0},
+      {n:"Arlon DPF510MTX Wht",c:.39,vinyl:1,sell:0},{n:"Arlon DPF6500 Wht",c:1.51,vinyl:1,sell:0},
+      {n:"Arlon SLX+ Wht",c:1.16,vinyl:1,sell:0},{n:"Arlon 5400 Silver Etch",c:1.10,vinyl:1,sell:0},
+      {n:"Econovue Blockout Blk/Wht",c:.83,vinyl:1,sell:0},
+      {n:"ACM White/Mill (std)",c:1.68,vinyl:0,sell:15.625},{n:"ACM White/Mill (bulk)",c:1.09,vinyl:0,sell:15.625},
+      {n:"ACM Black/Black",c:1.95,vinyl:0,sell:15.625},{n:"ACM White/White",c:3.44,vinyl:0,sell:15.625},
+      {n:"Acrylic Clear",c:4.22,vinyl:0,sell:0},
+      {n:"Coroplast 4mm",c:.38,vinyl:0,sell:7.8125},{n:"Coroplast heavy",c:1.28,vinyl:0,sell:7.8125},
+      {n:"Steel White/White",c:4.84,vinyl:0,sell:0},
+      {n:"Arlon 3420 Clr (laminate)",c:.52,vinyl:0,sell:0},{n:"Arlon 3200 Opt Clr (laminate)",c:1.26,vinyl:0,sell:0}
+    ]
+  },
+  jobs:[]
+};
+const TYPES=["Design","Production","Travel","Installation","Bucket truck"];
+
+/* ---------- storage ---------- */
+let DB;
+function load(){try{DB=JSON.parse(localStorage.getItem('supremeSigns'))||structuredClone(DEFAULTS);}catch(e){DB=structuredClone(DEFAULTS);} if(!DB.settings)DB=structuredClone(DEFAULTS); if(!DB.role)DB.role='office'; if(!DB.settings.officePin)DB.settings.officePin="1234";}
+function save(){localStorage.setItem('supremeSigns',JSON.stringify(DB));}
+
+/* ---------- engine ---------- */
+function S(){return DB.settings;}
+function shopRate(){const s=S();
+  const lab=s.wages.reduce((a,w)=>a+w.pay*(1+w.burden),0);
+  const oh=s.overhead.reduce((a,o)=>a+ (+o.v||0),0);
+  const hrs=s.billStaff*s.paidHrs*s.util;
+  return hrs? (lab+oh)/hrs : 0;}
+function designCost(){const s=S();return s.designHrs? s.designAnnual/s.designHrs:0;}
+function truckRate(){const s=S();return s.truckHrs? s.truckAnnual/s.truckHrs:0;}
+function rateFor(type){if(type==="Design")return designCost();if(type==="Bucket truck")return truckRate();return shopRate();}
+function mat(name){return S().materials.find(m=>m.n===name);}
+function deliveredCost(name){const m=mat(name);if(!m)return 0;return m.c+(m.vinyl?S().laminate:0);}
+function lineSqft(L){if(!L.w||!L.h)return 0;const a=(L.unit==='ft'?L.w*L.h:L.w*L.h/144)*(L.qty||1);return a;}
+function lineCost(L){return lineSqft(L)*(1+S().waste)*deliveredCost(L.m);}            // waste raises cost
+function lineSell(L){const m=mat(L.m);const trueArea=lineSqft(L);
+  if(m&&m.sell>0)return trueArea*m.sell;                                              // set price on true area
+  return lineCost(L)*(1+S().materialMarkup);}                                         // else markup on cost
+
+function computeSide(hoursByType, matLines, subCost){
+  const s=S();
+  let designHrs=hoursByType.Design||0;
+  let laborCost=0,laborPrice=0;
+  // production+travel+install+truck = cost*markup ; design = sell rate
+  let nonDesignCost=0;
+  TYPES.forEach(t=>{const h=hoursByType[t]||0;const c=h*rateFor(t);
+    if(t==="Design"){laborCost+=c;} else {nonDesignCost+=c;laborCost+=c;}});
+  const designC=designHrs*designCost();
+  const designPrice=designHrs*s.designSell;
+  laborPrice=designPrice+nonDesignCost*(1+s.laborMarkup);
+  const matCost=matLines.reduce((a,L)=>a+lineCost(L),0);
+  const matSell=matLines.reduce((a,L)=>a+lineSell(L),0);
+  const subC=+subCost||0; const subPrice=subC*(1+s.subMarkup);
+  const direct=laborCost+matCost+subC;
+  const overhead=direct*s.overheadPct;
+  const cost=direct+overhead;
+  const price=laborPrice+matSell+subPrice+overhead;
+  return {laborCost,matCost,subC,overhead,cost,price,
+          profit:price-cost,margin:price?(price-cost)/price:0,
+          hours:TYPES.reduce((a,t)=>a+(hoursByType[t]||0),0)};
+}
+function jobCalc(j){
+  const est=computeSide(j.estHours||{}, j.estMat||[], j.estSub||0);
+  // actuals use the QUOTE price (price fixed), actual cost from work order
+  const woHours={}; (j.woHours||[]).forEach(r=>{woHours[r.type]=(woHours[r.type]||0)+(+r.hrs||0);});
+  const act=computeSide(woHours, j.woMat||[], j.woSub||0);
+  const price=est.price;
+  const actCost=act.cost;
+  return {est,act:{...act,price,cost:actCost,profit:price-actCost,margin:price?(price-actCost)/price:0,hoursByType:woHours},price};
+}
+
+/* ---------- views ---------- */
+let view='jobs',openJob=null;
+function setView(v){view=v;openJob=null;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));render();}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+function applyRole(){const shop=DB.role==='shop';
+  document.querySelectorAll('nav button').forEach(b=>{if(b.dataset.v==='tracker'||b.dataset.v==='settings')b.style.display=shop?'none':'';});
+  const rw=document.getElementById('hdrRateWrap');if(rw)rw.style.display=shop?'none':'';
+  const rb=document.getElementById('roleBtn');if(rb)rb.textContent=shop?'Shop · log in':'Office';}
+function toggleRole(){
+  if(DB.role==='office'){DB.role='shop';view='jobs';openJob=null;}
+  else{const p=prompt('Enter office PIN to unlock office view:');if(p===null)return;if(p!==S().officePin){alert('Wrong PIN.');return;}DB.role='office';}
+  save();render();}
+document.getElementById('roleBtn').onclick=toggleRole;
+
+function render(){$('#hdrRate').textContent=money2(shopRate());
+  if(DB.role==='shop'&&view!=='jobs')view='jobs';
+  const a=$('#app');
+  if(view==='jobs')a.innerHTML=openJob!==null?jobEditor():jobsList();
+  else if(view==='tracker')a.innerHTML=tracker();
+  else a.innerHTML=settings();
+  applyRole();
+  wire();
+}
+
+/* ---- Jobs list ---- */
+function jobsList(){
+  const shop=DB.role==='shop';
+  let rows=DB.jobs.map((j,i)=>{const c=jobCalc(j);
+    if(shop)return `<tr class="jobrow" data-i="${i}"><td>${j.num||'—'}</td><td>${j.cust||''}</td><td>${j.date||''}</td><td>${j.stat||'Open'}</td></tr>`;
+    const am=c.act.hours>0?c.act.margin:c.est.margin;const cls=am<S().targetMargin?'bad':'good';
+    return `<tr class="jobrow" data-i="${i}"><td>${j.num||'—'}</td><td>${j.cust||''}</td><td>${j.date||''}</td>
+      <td class="right">${money(c.price)}</td><td class="right">${pct(c.est.margin)}</td>
+      <td class="right ${cls}">${c.act.hours>0?pct(c.act.margin):'—'}</td></tr>`;}).join('');
+  const head=shop?'<tr><th>Job #</th><th>Customer</th><th>Date</th><th>Status</th></tr>':'<tr><th>Job #</th><th>Customer</th><th>Date</th><th class="right">Quote</th><th class="right">Est margin</th><th class="right">Act margin</th></tr>';
+  const cols=shop?4:6;
+  return `<div class="card"><h2>${shop?'Work Orders':'Jobs'}</h2>
+    <button class="btn" id="newJob">+ New ${shop?'work order':'job'}</button>
+    <table style="margin-top:10px"><thead>${head}</thead>
+    <tbody>${rows||`<tr><td colspan=${cols} class="muted center" style="padding:14px">None yet — click the button above.</td></tr>`}</tbody></table>
+    <p class="muted">${shop?'Click a job to fill in materials used and hours worked.':'Click a job to open. Est margin = the quote; Act margin fills in once the work order is entered.'}</p></div>`;
+}
+
+/* ---- Job editor ---- */
+function matRowsHtml(arr,key){
+  const opts=S().materials.map(m=>`<option>${m.n}</option>`).join('');
+  return (arr.length?arr:[{}]).map((L,i)=>`<tr data-k="${key}" data-i="${i}">
+    <td><select class="m"><option></option>${opts}</select></td>
+    <td><select class="u"><option>in</option><option>ft</option></select></td>
+    <td><input class="w" type="number" step="0.1"></td>
+    <td><input class="h" type="number" step="0.1"></td>
+    <td><input class="q" type="number" step="1"></td>
+    <td class="ro sf"></td></tr>`).join('');
+}
+function jobEditor(){
+  const j=DB.jobs[openJob];const c=jobCalc(j);
+  const empOpts=S().employees.map(e=>`<option>${e}</option>`).join('');
+  const estHrs=TYPES.map(t=>`<div><label>${t} hrs</label><input class="esth" data-t="${t}" type="number" step="0.25" value="${j.estHours&&j.estHours[t]||''}"></div>`).join('');
+  const woRows=(j.woHours&&j.woHours.length?j.woHours:[{}]).map((r,i)=>`<tr data-i="${i}">
+    <td><input class="wd" type="date" value="${r.date||''}"></td>
+    <td><select class="we"><option></option>${empOpts}</select></td>
+    <td><select class="wt"><option></option>${TYPES.map(t=>`<option>${t}</option>`).join('')}</select></td>
+    <td><input class="wh" type="number" step="0.25" value="${r.hrs||''}"></td></tr>`).join('');
+  if(DB.role==='shop'){
+    return `<div class="card"><button class="btn alt" id="back">← Work Orders</button>
+      <div class="grid g4" style="margin-top:10px">
+        <div><label>Job #</label><input id="jnum" value="${j.num||''}"></div>
+        <div><label>Customer</label><input id="jcust" value="${j.cust||''}"></div>
+        <div><label>Date</label><input id="jdate" type="date" value="${j.date||''}"></div>
+        <div><label>Status</label><select id="jstat"><option ${j.stat!=='Done'?'selected':''}>Open</option><option ${j.stat==='Done'?'selected':''}>Done</option></select></div>
+      </div>
+      <h3>Materials used</h3>
+      <table><thead><tr><th>Material</th><th>Unit</th><th>W</th><th>H</th><th>Qty</th><th>Sq ft</th></tr></thead><tbody id="woMatBody">${matRowsHtml(j.woMat||[],'woMat')}</tbody></table>
+      <button class="btn" id="addWoMat">+ material</button>
+      <h3>Hours worked (with names)</h3>
+      <table><thead><tr><th>Date</th><th>Employee</th><th>Type</th><th>Hours</th></tr></thead><tbody id="woHrBody">${woRows}</tbody></table>
+      <button class="btn" id="addWoHr">+ hours line</button>
+      <div class="grid g2" style="margin-top:8px"><div><label>Subcontract / outsourced cost</label><input id="woSub" type="number" value="${j.woSub||''}"></div></div>
+      <div style="margin-top:10px"><button class="btn" id="saveJob">Save</button></div>
+    </div>`;
+  }
+  return `<div class="card"><button class="btn alt" id="back">← Jobs</button>
+    <div class="grid g4" style="margin-top:10px">
+      <div><label>Job #</label><input id="jnum" value="${j.num||''}"></div>
+      <div><label>Customer</label><input id="jcust" value="${j.cust||''}"></div>
+      <div><label>Date</label><input id="jdate" type="date" value="${j.date||''}"></div>
+      <div><label>Status</label><select id="jstat"><option ${j.stat!=='Done'?'selected':''}>Open</option><option ${j.stat==='Done'?'selected':''}>Done</option></select></div>
+    </div>
+
+    <h3>QUOTE — labour (estimated hours)</h3>
+    <div class="grid g4">${estHrs}</div>
+    <h3>QUOTE — materials</h3>
+    <table><thead><tr><th>Material</th><th>Unit</th><th>W</th><th>H</th><th>Qty</th><th>Sq ft</th></tr></thead><tbody id="estMatBody">${matRowsHtml(j.estMat||[],'estMat')}</tbody></table>
+    <button class="btn" id="addEstMat">+ material</button>
+    <div class="grid g2" style="margin-top:8px"><div><label>Subcontract / outsource cost (est)</label><input id="estSub" type="number" value="${j.estSub||''}"></div></div>
+
+    <h3>WORK ORDER — actual materials used</h3>
+    <table><thead><tr><th>Material</th><th>Unit</th><th>W</th><th>H</th><th>Qty</th><th>Sq ft</th></tr></thead><tbody id="woMatBody">${matRowsHtml(j.woMat||[],'woMat')}</tbody></table>
+    <button class="btn" id="addWoMat">+ material</button>
+    <h3>WORK ORDER — actual hours (with names)</h3>
+    <table><thead><tr><th>Date</th><th>Employee</th><th>Type</th><th>Hours</th></tr></thead><tbody id="woHrBody">${woRows}</tbody></table>
+    <button class="btn" id="addWoHr">+ hours line</button>
+    <div class="grid g2" style="margin-top:8px"><div><label>Subcontract / outsource cost (actual)</label><input id="woSub" type="number" value="${j.woSub||''}"></div></div>
+
+    <h3>RESULTS</h3>
+    <div class="kpi">
+      <div class="box"><div class="n">${money(c.price)}</div><div class="l">Quote price</div></div>
+      <div class="box"><div class="n">${money(c.est.cost)}</div><div class="l">Est cost</div></div>
+      <div class="box"><div class="n ${c.est.margin<S().targetMargin?'bad':'good'}">${pct(c.est.margin)}</div><div class="l">Est margin</div></div>
+      <div class="box"><div class="n ${c.act.hours>0&&c.act.margin<S().targetMargin?'bad':(c.act.hours>0?'good':'')}">${c.act.hours>0?pct(c.act.margin):'—'}</div><div class="l">Actual margin</div></div>
+    </div>
+    <p class="muted" style="margin-top:8px">Actual cost ${money(c.act.cost)} · Hours est ${c.est.hours.toFixed(1)} vs actual ${c.act.hours.toFixed(1)} · target ${pct(S().targetMargin)}</p>
+    <div style="margin-top:10px"><button class="btn" id="saveJob">Save job</button><button class="btn del" id="delJob">Delete</button></div>
+  </div>`;
+}
+
+/* ---- Tracker ---- */
+let trackMode='Weekly';
+function periodKey(dateStr,mode){const d=new Date(dateStr);if(isNaN(d))return null;
+  if(mode==='Monthly')return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  const day=(d.getDay()+6)%7; const mon=new Date(d); mon.setDate(d.getDate()-day); // Monday
+  if(mode==='Bi-Weekly'){const epoch=new Date(2026,0,5);const wk=Math.floor((mon-epoch)/(7*864e5));const bi=mon-0-(wk%2)*7*864e5;return new Date(bi).toISOString().slice(0,10);}
+  return mon.toISOString().slice(0,10);}
+function tracker(){
+  const done=DB.jobs.filter(j=>j.date);
+  const map={};
+  done.forEach(j=>{const c=jobCalc(j);const k=periodKey(j.date,trackMode);if(!k)return;
+    map[k]=map[k]||{jobs:0,cost:0,rev:0,profit:0,hrs:0};
+    const cost=c.act.hours>0?c.act.cost:c.est.cost; const m=map[k];
+    m.jobs++;m.cost+=cost;m.rev+=c.price;m.profit+=c.price-cost;m.hrs+=(c.act.hours>0?c.act.hours:c.est.hours);});
+  const keys=Object.keys(map).sort();
+  const maxCost=Math.max(1,...keys.map(k=>map[k].cost));
+  const bars=keys.map(k=>{const m=map[k];const mg=m.rev?(m.profit/m.rev):0;
+    return `<div class="barrow"><div class="lab">${k}</div><div class="bar" style="width:${Math.round(m.cost/maxCost*260)}px"></div>
+      <div>${money(m.cost)} cost · ${money(m.rev)} rev · <span class="${mg<S().targetMargin?'bad':'good'}">${pct(mg)}</span> · ${m.jobs} jobs</div></div>`;}).join('');
+  const tot=keys.reduce((a,k)=>{a.cost+=map[k].cost;a.rev+=map[k].rev;a.profit+=map[k].profit;a.jobs+=map[k].jobs;return a;},{cost:0,rev:0,profit:0,jobs:0});
+  return `<div class="card"><h2>Cost Tracker</h2>
+    <div>${['Weekly','Bi-Weekly','Monthly'].map(m=>`<button class="btn ${m===trackMode?'':'alt'}" data-mode="${m}">${m}</button>`).join('')}</div>
+    <div class="kpi" style="margin-top:12px">
+      <div class="box"><div class="n">${tot.jobs}</div><div class="l">Jobs</div></div>
+      <div class="box"><div class="n">${money(tot.cost)}</div><div class="l">Total cost</div></div>
+      <div class="box"><div class="n">${money(tot.rev)}</div><div class="l">Revenue</div></div>
+      <div class="box"><div class="n ${tot.rev&&tot.profit/tot.rev<S().targetMargin?'bad':'good'}">${tot.rev?pct(tot.profit/tot.rev):'—'}</div><div class="l">Margin</div></div>
+    </div>
+    <h3>${trackMode} cost</h3>
+    ${bars||'<p class="muted">No dated jobs yet. Add jobs with a date to see the trend.</p>'}
+  </div>`;
+}
+
+/* ---- Settings ---- */
+function settings(){const s=S();
+  const wages=s.wages.map((w,i)=>`<tr data-i="${i}"><td><input class="wr" value="${w.role}"></td><td><input class="wp" type="number" value="${w.pay}"></td><td><input class="wb" type="number" step="0.01" value="${w.burden}"></td><td class="ro">${money(w.pay*(1+w.burden))}</td></tr>`).join('');
+  const oh=s.overhead.map((o,i)=>`<tr data-i="${i}"><td><input class="oi" value="${o.i}"></td><td><input class="ov" type="number" value="${o.v}"></td></tr>`).join('');
+  const mats=s.materials.map((m,i)=>`<tr data-i="${i}"><td><input class="mn" value="${m.n}"></td><td><input class="mc" type="number" step="0.01" value="${m.c}"></td><td class="center"><input class="mv" type="number" min="0" max="1" value="${m.vinyl}" style="width:50px"></td><td><input class="ms" type="number" step="0.01" value="${m.sell}"></td></tr>`).join('');
+  return `<div class="card"><h2>Shop Rate</h2>
+    <table><thead><tr><th>Role</th><th>Annual pay</th><th>Burden</th><th>Loaded</th></tr></thead><tbody id="wageBody">${wages}</tbody></table>
+    <h3>Overhead (annual)</h3>
+    <table><thead><tr><th>Item</th><th>Annual $</th></tr></thead><tbody id="ohBody">${oh}</tbody></table>
+    <div class="grid g3" style="margin-top:10px">
+      <div><label>Billable staff</label><input id="billStaff" type="number" value="${s.billStaff}"></div>
+      <div><label>Paid hrs / yr each</label><input id="paidHrs" type="number" value="${s.paidHrs}"></div>
+      <div><label>Utilisation %</label><input id="util" type="number" step="0.05" value="${s.util}"></div>
+    </div>
+    <div class="kpi" style="margin-top:12px">
+      <div class="box"><div class="n">${money2(shopRate())}</div><div class="l">Break-even shop rate /hr</div></div>
+      <div class="box"><div class="n">${money2(shopRate()/(1-s.targetMargin))}</div><div class="l">Recommended billing /hr</div></div>
+      <div class="box"><div class="n">${money2(designCost())}</div><div class="l">Design cost /hr</div></div>
+      <div class="box"><div class="n">${money2(truckRate())}</div><div class="l">Truck rate /hr</div></div>
+    </div>
+  </div>
+  <div class="card"><h2>Design, Truck, Markups</h2>
+    <div class="grid g4">
+      <div><label>Designer annual $</label><input id="designAnnual" type="number" value="${s.designAnnual}"></div>
+      <div><label>Design hrs / yr</label><input id="designHrs" type="number" value="${s.designHrs}"></div>
+      <div><label>Design SELL $/hr</label><input id="designSell" type="number" value="${s.designSell}"></div>
+      <div><label>Truck annual $</label><input id="truckAnnual" type="number" value="${s.truckAnnual}"></div>
+      <div><label>Truck hrs / yr</label><input id="truckHrs" type="number" value="${s.truckHrs}"></div>
+      <div><label>Labour markup</label><input id="laborMarkup" type="number" step="0.05" value="${s.laborMarkup}"></div>
+      <div><label>Material markup</label><input id="materialMarkup" type="number" step="0.05" value="${s.materialMarkup}"></div>
+      <div><label>Subcontract markup</label><input id="subMarkup" type="number" step="0.05" value="${s.subMarkup}"></div>
+      <div><label>Overhead %</label><input id="overheadPct" type="number" step="0.01" value="${s.overheadPct}"></div>
+      <div><label>Target margin</label><input id="targetMargin" type="number" step="0.01" value="${s.targetMargin}"></div>
+      <div><label>Laminate $/sqft</label><input id="laminate" type="number" step="0.01" value="${s.laminate}"></div>
+      <div><label>Waste %</label><input id="waste" type="number" step="0.01" value="${s.waste}"></div>
+    </div>
+  </div>
+  <div class="card"><h2>Employees (names)</h2>
+    <textarea id="emps" rows="3">${s.employees.join('\n')}</textarea>
+    <p class="muted">One name per line — these fill the work-order dropdowns.</p>
+  </div>
+  <div class="card"><h2>Materials</h2>
+    <table><thead><tr><th>Material</th><th>Cost $/sqft</th><th>Vinyl? (1=yes)</th><th>Sell $/sqft (set)</th></tr></thead><tbody id="matBody">${mats}</tbody></table>
+    <p class="muted">Vinyl=1 auto-adds laminate. Sell blank/0 = price by markup. ACM 15.63=$500/sheet, Coroplast 7.81=$250/sheet.</p>
+  </div>
+  <div class="card"><h2>Data &amp; Access</h2>
+    <div class="grid g2">
+      <div><label>Office PIN (unlocks office view)</label><input id="officePin" value="${s.officePin||''}"></div>
+    </div>
+    <div style="margin-top:10px">
+      <button class="btn" id="backupBtn">Backup (download)</button>
+      <button class="btn alt" id="restoreBtn">Restore from file</button>
+      <button class="btn alt" id="csvBtn">Export jobs (CSV)</button>
+      <input type="file" id="restoreFile" accept="application/json" style="display:none">
+    </div>
+    <p class="muted">Back up regularly — data lives in this browser only. Restore moves it to another computer. The “Shop” view (header button) hides all costs &amp; margins from the floor.</p>
+  </div>
+  <div class="card"><button class="btn" id="saveSettings">Save settings</button>
+    <button class="btn alt" id="resetSettings">Reset to defaults</button></div>`;
+}
+
+/* ---------- wiring ---------- */
+function readMatRows(bodyId){const out=[];document.querySelectorAll('#'+bodyId+' tr').forEach(tr=>{
+  const m=$('.m',tr).value;if(!m)return;out.push({m,unit:$('.u',tr).value,w:+$('.w',tr).value||0,h:+$('.h',tr).value||0,qty:+$('.q',tr).value||0});});return out;}
+function refreshSqft(){document.querySelectorAll('#estMatBody tr,#woMatBody tr').forEach(tr=>{
+  const L={m:$('.m',tr).value,unit:$('.u',tr).value,w:+$('.w',tr).value||0,h:+$('.h',tr).value||0,qty:+$('.q',tr).value||0};
+  const sf=$('.sf',tr);if(sf)sf.textContent=lineSqft(L)?lineSqft(L).toFixed(1):'';});}
+
+function wire(){
+  if(view==='jobs'&&openJob===null){
+    $('#newJob').onclick=()=>{DB.jobs.push({num:'',cust:'',date:new Date().toISOString().slice(0,10),stat:'Open',estHours:{},estMat:[],woMat:[],woHours:[]});openJob=DB.jobs.length-1;save();render();};
+    document.querySelectorAll('.jobrow').forEach(r=>r.onclick=()=>{openJob=+r.dataset.i;render();});
+  }
+  if(view==='jobs'&&openJob!==null){
+    $('#back').onclick=()=>{openJob=null;render();};
+    const live=()=>{refreshSqft();};
+    document.querySelectorAll('#app input,#app select').forEach(e=>e.addEventListener('input',live));
+    const ae=$('#addEstMat');if(ae)ae.onclick=()=>{const j=DB.jobs[openJob];j.estMat=readMatRows('estMatBody');j.estMat.push({});persistJob();render();};
+    $('#addWoMat').onclick=()=>{const j=DB.jobs[openJob];j.woMat=readMatRows('woMatBody');j.woMat.push({});persistJob();render();};
+    $('#addWoHr').onclick=()=>{const j=DB.jobs[openJob];persistJob();(j.woHours=j.woHours||[]).push({});save();render();};
+    $('#saveJob').onclick=()=>{persistJob();render();alert('Saved.');};
+    const dj=$('#delJob');if(dj)dj.onclick=()=>{if(confirm('Delete this job?')){DB.jobs.splice(openJob,1);openJob=null;save();render();}};
+    // populate selects to saved values
+    const j=DB.jobs[openJob];
+    setMatSelects('estMatBody',j.estMat||[]);setMatSelects('woMatBody',j.woMat||[]);
+    document.querySelectorAll('#woHrBody tr').forEach((tr,i)=>{const r=(j.woHours||[])[i]||{};if($('.we',tr))$('.we',tr).value=r.emp||'';if($('.wt',tr))$('.wt',tr).value=r.type||'';});
+    refreshSqft();
+  }
+  if(view==='tracker'){document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{trackMode=b.dataset.mode;render();});}
+  if(view==='settings'){
+    $('#saveSettings').onclick=saveSettings;
+    $('#resetSettings').onclick=()=>{if(confirm('Reset all settings to defaults?')){DB.settings=structuredClone(DEFAULTS.settings);save();render();}};
+    $('#backupBtn').onclick=backup;$('#csvBtn').onclick=exportCSV;
+    $('#restoreBtn').onclick=()=>$('#restoreFile').click();
+    $('#restoreFile').onchange=e=>{if(e.target.files[0])restore(e.target.files[0]);};
+    document.querySelectorAll('#app input').forEach(e=>e.addEventListener('input',()=>{/* live loaded col */ if(e.classList.contains('wp')||e.classList.contains('wb')){saveSettings(true);render();}}));
+  }
+}
+function setMatSelects(bodyId,arr){document.querySelectorAll('#'+bodyId+' tr').forEach((tr,i)=>{const L=arr[i];if(!L)return;
+  if($('.m',tr))$('.m',tr).value=L.m||'';if($('.u',tr))$('.u',tr).value=L.unit||'in';
+  if($('.w',tr))$('.w',tr).value=L.w||'';if($('.h',tr))$('.h',tr).value=L.h||'';if($('.q',tr))$('.q',tr).value=L.qty||'';});}
+function readWO(){const j=DB.jobs[openJob];j.woHours=[];document.querySelectorAll('#woHrBody tr').forEach(tr=>{
+  j.woHours.push({date:$('.wd',tr).value,emp:$('.we',tr).value,type:$('.wt',tr).value,hrs:+$('.wh',tr).value||0});});}
+function persistJob(){const j=DB.jobs[openJob];
+  if($('#jnum'))j.num=$('#jnum').value;if($('#jcust'))j.cust=$('#jcust').value;if($('#jdate'))j.date=$('#jdate').value;if($('#jstat'))j.stat=$('#jstat').value;
+  if(document.querySelector('.esth')){j.estHours={};document.querySelectorAll('.esth').forEach(e=>{j.estHours[e.dataset.t]=+e.value||0;});}
+  if($('#estMatBody'))j.estMat=readMatRows('estMatBody');
+  if($('#woMatBody'))j.woMat=readMatRows('woMatBody');
+  if($('#estSub'))j.estSub=+$('#estSub').value||0;if($('#woSub'))j.woSub=+$('#woSub').value||0;
+  if($('#woHrBody'))readWO();save();}
+function saveSettings(silent){const s=S();
+  document.querySelectorAll('#wageBody tr').forEach((tr,i)=>{s.wages[i].role=$('.wr',tr).value;s.wages[i].pay=+$('.wp',tr).value||0;s.wages[i].burden=+$('.wb',tr).value||0;});
+  document.querySelectorAll('#ohBody tr').forEach((tr,i)=>{s.overhead[i].i=$('.oi',tr).value;s.overhead[i].v=+$('.ov',tr).value||0;});
+  document.querySelectorAll('#matBody tr').forEach((tr,i)=>{s.materials[i].n=$('.mn',tr).value;s.materials[i].c=+$('.mc',tr).value||0;s.materials[i].vinyl=+$('.mv',tr).value||0;s.materials[i].sell=+$('.ms',tr).value||0;});
+  ['billStaff','paidHrs','util','designAnnual','designHrs','designSell','truckAnnual','truckHrs','laborMarkup','materialMarkup','subMarkup','overheadPct','targetMargin','laminate','waste'].forEach(k=>{const el=$('#'+k);if(el)s[k]=+el.value||0;});
+  if($('#emps'))s.employees=$('#emps').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  if($('#officePin'))s.officePin=$('#officePin').value;
+  save();if(!silent){render();alert('Settings saved.');}
+}
+function dl(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
+function backup(){dl(new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}),'supreme-signs-backup-'+new Date().toISOString().slice(0,10)+'.json');}
+function restore(file){const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(!d.settings||!d.jobs)throw 0;DB=d;if(!DB.role)DB.role='office';save();render();alert('Data restored.');}catch(err){alert('That is not a valid backup file.');}};r.readAsText(file);}
+function exportCSV(){const hdr=['Job#','Customer','Date','Status','Quote $','Est cost','Est margin %','Act cost','Act margin %','Est hours','Act hours'];
+  const rows=DB.jobs.map(j=>{const c=jobCalc(j);return [j.num,j.cust,j.date,j.stat,Math.round(c.price),Math.round(c.est.cost),(c.est.margin*100).toFixed(1),Math.round(c.act.cost),c.act.hours>0?(c.act.margin*100).toFixed(1):'',c.est.hours.toFixed(1),c.act.hours.toFixed(1)];});
+  const csv=[hdr,...rows].map(r=>r.map(x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  dl(new Blob([csv],{type:'text/csv'}),'supreme-signs-jobs-'+new Date().toISOString().slice(0,10)+'.csv');}
+load();render();
+</script>
+</body>
+</html>
